@@ -14,5 +14,5 @@ Y para ejecutarlo corran:
 ```
 ./fork
 ```
-El resultado de correr el script se encuentra en el ```/tmp/resultado```
+El resultado de correr el script se encuentra en el archivo```/tmp/resultado```
 
