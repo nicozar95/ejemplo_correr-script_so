@@ -10,7 +10,17 @@ int main(void){
 
   #define SIZE 1024
   /*
-  Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script
+  Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script.
+  El script que estamos corriendo es un script en python me cuenta la cantidad de palabras por entrada estandar.
+  Mi objetivo en este ejemplo es que al enviar "hola pepe", este programa me cree un archivo con el resultado del script:
+  
+  "
+  hola 1
+  pepe 1
+  "
+  
+  Es un script de python pero tranquilamente puede ser un script de bash, pearl, etc.
+  
   Primero lo primero, hay que crear una comunicacion entre el proceso padre y el hijo, para eso
   creo el pipeline
   
