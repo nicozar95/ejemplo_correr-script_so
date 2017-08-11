@@ -16,10 +16,10 @@ int main(void){
   */
 
   int pipe_padreAHijo[2];
-	int pipe_hijoAPadre[2];
+  int pipe_hijoAPadre[2];
 
-	pipe(pipe_padreAHijo);
-	pipe(pipe_hijoAPadre);
+  pipe(pipe_padreAHijo);
+  pipe(pipe_hijoAPadre);
 
   /*¡Momento! ¿Porque 2 pipeline? El pipeline es unidireccional, osea, si quiero que
   mi proceso padre le envie algo al hijo y que tambien reciva del hijo tengo que tener 2 pipe.
@@ -31,7 +31,7 @@ int main(void){
   Bueno eso es como se arma un pipe, ahora vamos a forkear
   */
   pid_t pid;
-	int status;
+  int status;
   char* buffer=malloc(SIZE);
 
   if ((pid=fork()) == 0 )
@@ -42,27 +42,27 @@ int main(void){
 
   {/*Aca estamos ejecutando lo que va a correr el proceso hijo*/
 
-    dup2(pipe_padreAHijo[0],STDIN_FILENO);
-		dup2(pipe_hijoAPadre[1],STDOUT_FILENO);
+  	dup2(pipe_padreAHijo[0],STDIN_FILENO);
+  	dup2(pipe_hijoAPadre[1],STDOUT_FILENO);
 
-    /*Esto es super importante, lo que hace dup2() es duplicar un fd creandome una copia del mismo
+  /*Esto es super importante, lo que hace dup2() es duplicar un fd creandome una copia del mismo
     donde yo le diga, en este caso estoy cambiando el fd de la entrada estandar del proceso hijo (STDIN_FILENO)
     y lo estoy reemplazando por el pipe padre->hijo (pipe_padreAHijo[0]). Tambien le estoy cambiando
     el fd de la salida estadar del hijo (STDOUT_FILENO), por el pipe hijo -> padre (pipe_hijoAPadre[1])*/
     /*Acuerdense de la regla de oro para los pipes: 0 es lectura, 1 es escritura*/
 
-    close( pipe_padreAHijo[1] );
-		close( pipe_hijoAPadre[0] );
-		close( pipe_hijoAPadre[1]);
-		close( pipe_padreAHijo[0]);
+   	close( pipe_padreAHijo[1] );
+  	close( pipe_hijoAPadre[0] );
+	close( pipe_hijoAPadre[1]);
+	close( pipe_padreAHijo[0]);
 
     /*Como ya cree la copia puedo cerrar el resto de los fd, en este caso las puntas de los pipes.
     No tengan miedo de cerrar archivos en este parte del codigo porque estamos en el hijo, generalmente es de buena
     costumbre cerrar los fds en el hijo porque es una copia igual de lo que tiene el padre y puede
     generar problemas*/
 
-    system("./script_preparacion.py");
-    exit(1);
+    	system("./script_preparacion.py");
+    	exit(1);
 
     /*Listo, fin del hijo.
     Un par de items a destacar:
@@ -93,21 +93,20 @@ int main(void){
     */
   }else{
     /*Mucho hijo vamos con el padre*/
-
-    close( pipe_padreAHijo[0] );
-    close( pipe_hijoAPadre[1] );
+	close( pipe_padreAHijo[0] );
+    	close( pipe_hijoAPadre[1] );
     /*Aca solo cierro los fds que no me interesan porque son los que esta usando el hijo,
     me quedan los otros 2 que son los que uso para escribir en el proceso hijo y para leer
     lo que me tenga que devolver*/
 
-    write( pipe_padreAHijo[1],"hola pepe",strlen("hola pepe"));
+    	write( pipe_padreAHijo[1],"hola pepe",strlen("hola pepe"));
     /*Asi de sencillo es escribir en el proceso hijo, cuando el hijo lo reciva, lo va a recibir como
     entrada estandar*/
 
-    close( pipe_padreAHijo[1]);
+    	close( pipe_padreAHijo[1]);
     /*Ya esta, como termine de escribir cierro esta parte del archivo*/
 
-    waitpid(pid,&status,0);
+    	waitpid(pid,&status,0);
     /*Esto es el "mata zombies", lo que hace waitpid es esperar a que el proceso hijo termine.
     Mientras tanto el padre se queda bloqueado. Si vos no haces esto, cuando el hijo termine la ejecucion
     por exit() no va a poder irse ya que la entrada del proceso hijo en la tabla de procesos del sistema operativo
@@ -115,8 +114,8 @@ int main(void){
     que se lo conoce como "zombie", tecnicamente termino porque hizo un exit pero sigue vivo en la tabla de procesos.
     */
 
-    read( pipe_hijoAPadre[0], buffer, SIZE );
-    close( pipe_hijoAPadre[0]);
+    	read( pipe_hijoAPadre[0], buffer, SIZE );
+    	close( pipe_hijoAPadre[0]);
     /*Listo asi de sencillo leo de un proceso hijo, ahora el resultado de mi script se encuentra en
     "buffer" y tiene un tamaño SIZE*/
   }
