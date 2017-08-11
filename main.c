@@ -145,14 +145,16 @@ int main(void){
     
     Mientras tanto el padre se queda bloqueado. Si vos no haces esto, cuando el hijo termine la ejecucion
     por exit() no va a poder irse ya que la entrada del proceso hijo en la tabla de procesos del sistema operativo
-    sigue estando para que el padre lea la salida estandar. El proceso hijo se encuentra en un estado de terminacion
+    sigue estando para que el padre lea el codigo de salida. El proceso hijo se encuentra en un estado de terminacion
     que se lo conoce como "zombie", tecnicamente esta muerto porque hizo un exit pero sigue vivo en la tabla de procesos.
     
-    Esto se debe que la llamada de wait() o waitpid() permite al padre leer el exitcode del hijo. Si el padre nunca se entero
+    Esto se debe que la llamada de wait() o waitpid() permite al padre leer el exitcode o codigo de salida del hijo. Si el padre nunca se entero
     que el hijo esta muerto, el SO no lo puede sacar (salvo a la fuerza).
     
-    ¿Que problemas trae un proceso zombie? No muchos porque no usan recursos del systema, sin embargo tienen un PID asignado por
-    el SO, el cual el sistema operativo tiene un numero finitos de estos. Por eso es importante matarlos.
+    ¿Que problemas trae un proceso zombie? No muchos en cuestion de memoria porque no usan recursos del systema, sin embargo tienen un PID 
+    asignado por el SO, el cual el sistema operativo tiene un numero finitos de estos. Un zombie no causa muchos problemas.
+    Varios zombies me limitan la cantidad de procesos que puedo ejecutar, si estan debuggeando un programa que te cree
+    zombies sin querer te puede limitar el numero de procesos disponibles. Por eso es importante matarlos
     
     Sigamos con el ejemplo.
     */
