@@ -104,7 +104,7 @@ int main(void){
     entrada estandar*/
 
     	close( pipe_padreAHijo[1]);
-    /*Ya esta, como termine de escribir cierro esta parte del archivo*/
+    /*Ya esta, como termine de escribir cierro esta parte del pipe*/
 
     	waitpid(pid,&status,0);
     /*Esto es el "mata zombies", lo que hace waitpid es esperar a que el proceso hijo termine.
