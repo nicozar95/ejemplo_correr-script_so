@@ -10,7 +10,7 @@ int main(void){
 
   #define SIZE 1024
   /*
-  Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script.
+  Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script, utilizando las llamadas de fork() y pipe()
   El script que estamos corriendo es un script en python me cuenta la cantidad de palabras por entrada estandar.
   Mi objetivo en este ejemplo es que al enviar "hola pepe", este programa me cree un archivo con el resultado del script:
 
