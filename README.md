@@ -5,7 +5,7 @@ Esta hecho de 2 maneras diferentes, una con la llamada de fork/exec y otro con l
 ## Setup
 Agregen los permisos de ejecucion al script de python, si el script no es ejecutable con:
 ```
-chmod +x script_preparacion.py
+chmod +x script_transformacion.py
 ```
 Para compilar el ejemplo de fork/exec y ejecutarlo:
 ```

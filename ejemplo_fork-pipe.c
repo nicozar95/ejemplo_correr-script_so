@@ -11,7 +11,8 @@ int main(void){
   #define SIZE 1024
   /*
   Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script, utilizando las llamadas de fork() y pipe()
-  El script que estamos corriendo es un script en python me cuenta la cantidad de palabras por entrada estandar.
+  El script que estamos corriendo es un script en python me cuenta la cantidad de palabras por entrada estandar. Cabe aclarar
+  que no es objetivo para el desarrollo del TP la manera en la que el script funciona, sino como enviarle los datos y como recivirlos
   Mi objetivo en este ejemplo es que al enviar "hola pepe", este programa me cree un archivo con el resultado del script:
 
   "
@@ -90,7 +91,7 @@ int main(void){
 
       char *argv[] = {NULL};
       char *envp[] = {NULL};
-      execve("./script_preparacion.py", argv, envp);
+      execve("./script_transformacion.py", argv, envp);
     	exit(1);
 
     /*Listo, fin del hijo.
@@ -108,7 +109,7 @@ int main(void){
       Fijense que no pueden ser NULL pero pueden ser un un sring terminado en NULL. Hay otras funciones de la familia exec(),
       son libres de elegir la que quieran.
 
-      ¿Pero el script no recive algo, un archivo a preparar o una cantidad de datos no?
+      ¿Pero el script no recive algo, un archivo a transformar o una cantidad de datos no?
       Ahhhh ahi esta la magia de esto, el script recive algo por entrada estandar (STDIN).
       Esos datos son los que el padre le va a mandar al hijo... mas adelante, cuando estemos en el padre muestro como se lo manda
       ¿Y donde va el resultado del script?
@@ -176,7 +177,7 @@ int main(void){
   fputs(buffer,fd);
   fclose(fd);
 
-  /*Eso es todo! Fijense que a la hora de agregacion de un archivo es exactamente igual:
+  /*Eso es todo! Fijense que a la hora de reduccion de un archivo es exactamente igual:
   Crean 2 pipes, forkean, corren el script, guardan el resultado.*/
   free(buffer);
   return 0;
