@@ -8,11 +8,10 @@ chmod +x script_preparacion.py
 ```
 Compilen ejecutando:
 ```
-gcc main.c -o fork
+gcc ejemplo_fork.c
 ```
 Y para ejecutarlo corran:
 ```
-./fork
+./a.out
 ```
 El resultado de correr el script se encuentra en el archivo```/tmp/resultado```
-

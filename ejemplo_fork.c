@@ -87,8 +87,10 @@ int main(void){
 
     Es mas sencillo cerrar los fds que el hijo no este usando para evitar confusiones.
     */
+
       char *argv[] = {NULL};
-    	execvp("./script_preparacion.py",argv);
+      char *envp[] = {NULL};
+      execve("./script_preparacion.py", argv, envp);
     	exit(1);
 
     /*Listo, fin del hijo.
@@ -100,8 +102,12 @@ int main(void){
       lo van a recivir por sockets lo mas probable es que ustedes tambien tengan que hacer eso.
       (No es nada complicado solo un chmod())
 
-      + execvp(): ejecuta el comando que le pases como argumento, en este caso yo le digo que corra
-      el script nada mas, hay muchas otras funciones de la familia exec() son libres de usar la que quieran.
+      + execve(): Miembro de la familia exec() de funciones de Linux. Ejecuta el comando que le pases como argumento,
+      en este caso yo le digo que corra el script nada mas, hay muchas otras funciones de la familia exec() son
+      libres de usar la que quieran. Los 2 argumentos hacen uso de las variables que recive el script tanto como argumentos y globales,
+      Fijense que no pueden ser NULL pero pueden ser un un sring terminado en NULL. Hay otras funciones de la familia exec(),
+      son libres de elegir la que quieran.
+
       ¿Pero el script no recive algo, un archivo a preparar o una cantidad de datos no?
       Ahhhh ahi esta la magia de esto, el script recive algo por entrada estandar (STDIN).
       Esos datos son los que el padre le va a mandar al hijo... mas adelante, cuando estemos en el padre muestro como se lo manda
@@ -114,7 +120,9 @@ int main(void){
       un return, aca no estamos en una funcion ni en un hilo, estamos en un proceso hijo. Por eso es
       necesario matarlo con un exit al finalizar para no generar problemas.
 
-      + system(): Este es otra manera de hacer lo que hice arriba, funciona muy parecido a exec()
+      + system(): Este es otra manera de hacer lo que hice arriba, funciona muy parecido a exec(), pero a diferencia
+      de exec(), no me reemplaza el proceso, sino que me genera otro. Puede causar mas overhead y blah blah pero son libres
+      de usarlo porque tambien tiene un par de trucos bajo la manga si son cancheros con bash y los comandos de linux.
     */
   }else{
     /*Mucho hijo vamos con el padre*/
