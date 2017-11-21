@@ -12,7 +12,7 @@ int main(void){
   /*
   Este es un ejemplo de como hacer un proceso que cree un hijito y este corra un script, utilizando las llamadas de fork() y pipe()
   El script que estamos corriendo es un script en python me cuenta la cantidad de palabras por entrada estandar. Cabe aclarar
-  que no es objetivo para el desarrollo del TP la manera en la que el script funciona, sino como enviarle los datos y como recivirlos
+  que no es objetivo para el desarrollo del TP la manera en la que el script funciona, sino como enviarle los datos y como recibirlos
   Mi objetivo en este ejemplo es que al enviar "hola pepe", este programa me cree un archivo con el resultado del script:
 
   "
@@ -26,7 +26,7 @@ int main(void){
   creo el pipeline
 
   El pipeline o pipe es un canal de datos unidireccional donde de un lado tengo un fd que lee o el fd en la pocision 0
-  y del otro lado un fd que escribe o el fd en la pocision 1, todo lo que escriba en el lado 1 del pipe se queda en un buffer
+  y del otro lado un fd que escribe o el fd en la posicion 1, todo lo que escriba en el lado 1 del pipe se queda en un buffer
   hasta ser leido en el lado 0. Esta es la manera que tengo de comunicar un procesos por medio de estos fd raros.
   */
 
@@ -36,11 +36,11 @@ int main(void){
   pipe(pipe_padreAHijo);
   pipe(pipe_hijoAPadre);
 
-  /*¡Momento! ¿Porque 2 pipeline? El pipeline es unidireccional, osea, si quiero que
+  /*¡Momento! ¿Por que 2 pipeline? El pipeline es unidireccional, o sea, si quiero que
   mi proceso padre le envie algo al hijo y que tambien reciva del hijo tengo que tener 2 pipes.
 
   El pipe es un canal de datos unidireccional, lo que significa que tiene 2 fds por eso a la hora de setearlos lo declaro
-  como un array de enteros de 2 elementos. Acuerdense que la pocision 0 del pipe es de lectura y la pocision 1 es de escritura
+  como un array de enteros de 2 elementos. Acuerdense que la posicion 0 del pipe es de lectura y la posicion 1 es de escritura
 
   Bueno eso es como se arma un pipe, ahora vamos a forkear
   */
@@ -61,8 +61,8 @@ int main(void){
 
   /*Esto es super importante, lo que hace dup2() es duplicar un fd creandome una copia del mismo
     donde yo le diga, en este caso estoy cambiando el fd de la entrada estandar del proceso hijo (STDIN_FILENO)
-    y lo estoy reemplazando por el pipe padre->hijo (pipe_padreAHijo[0], osea donde debe leer de lo que el padre le escribe).
-    Tambien le estoy cambiando el fd de la salida estadar del hijo (STDOUT_FILENO), por el pipe hijo -> padre
+    y lo estoy reemplazando por el pipe padre->hijo (pipe_padreAHijo[0], o sea donde debe leer de lo que el padre le escribe).
+    Tambien le estoy cambiando el fd de la salida estandar del hijo (STDOUT_FILENO), por el pipe hijo -> padre
     (pipe_hijoAPadre[1], donde el hijo escribe para que el padre despues lea)*/
 
     /*Acuerdense de la regla de oro para los pipes: 0 es lectura, 1 es escritura*/
@@ -76,7 +76,7 @@ int main(void){
     todos los fds del padre, esto puede llegar a traer problemas si no sabes que fds heredaste.
     En este caso, el pipe se define antes de correr el proceso hijo (se debe definir antes de correr el proceso hijo), por lo tanto
     acabamos de duplicar la cantidad de fds que tenemos en el programa, porque tenemos una copia del mismo en el hijo y el
-    original en el padre, osea cada proceso tiene acceso a ambos lados del pipe, lo cual no es lo deseable, si quiero escribir al padre
+    original en el padre, o sea que cada proceso tiene acceso a ambos lados del pipe, lo cual no es lo deseable, si quiero escribir al padre
     quiero que solo el padre lo lea.
     Tambien hay otros tipos de problemas:
 
@@ -99,19 +99,19 @@ int main(void){
 
       + Fijarse que el script tenga permisos de ejecucion: parece una boludez pero mas de una vez me
       paso que no me andaba porque no tenia ese permiso.
-      Hay gente que cuando recive el script, ya le agrega los permisos de una. Si el script
-      lo van a recivir por sockets lo mas probable es que ustedes tambien tengan que hacer eso.
+      Hay gente que cuando recibe el script, ya le agrega los permisos de una. Si el script
+      lo van a recibir por sockets lo mas probable es que ustedes tambien tengan que hacer eso.
       (No es nada complicado solo un chmod())
 
       + execve(): Miembro de la familia exec() de funciones de Linux. Ejecuta el comando que le pases como argumento,
       en este caso yo le digo que corra el script nada mas, hay muchas otras funciones de la familia exec() son
-      libres de usar la que quieran. Los 2 argumentos hacen uso de las variables que recive el script tanto como argumentos y globales,
-      Fijense que no pueden ser NULL pero pueden ser un un sring terminado en NULL. Hay otras funciones de la familia exec(),
+      libres de usar la que quieran. Los 2 argumentos hacen uso de las variables que recibe el script tanto como argumentos y globales,
+      Fijense que no pueden ser NULL pero pueden ser un un string terminado en NULL. Hay otras funciones de la familia exec(),
       son libres de elegir la que quieran.
 
-      ¿Pero el script no recive algo, un archivo a transformar o una cantidad de datos no?
-      Ahhhh ahi esta la magia de esto, el script recive algo por entrada estandar (STDIN).
-      Esos datos son los que el padre le va a mandar al hijo... mas adelante, cuando estemos en el padre muestro como se lo manda
+      ¿Pero el script no recibe algo, un archivo a transformar o una cantidad de datos no?
+      Ahhhh ahi esta la magia de esto, el script recibe algo por entrada estandar (STDIN).
+      Esos datos son los que el padre le va a mandar al hijo... mas adelante, cuando estemos en el padre, muestro como se lo manda
       ¿Y donde va el resultado del script?
       ¡Por salida estandar! Despues el padre lo va a tener que recibir
 
@@ -129,7 +129,7 @@ int main(void){
     /*Mucho hijo vamos con el padre*/
 	close( pipe_padreAHijo[0] ); //Lado de lectura de lo que el padre le pasa al hijo.
     	close( pipe_hijoAPadre[1] ); //Lado de escritura de lo que hijo le pasa al padre.
-    /*Aca cierro los fds que no me interesan porque son los que esta usando el hijo, tambien los cierros por el tema del
+    /*Aca cierro los fds que no me interesan porque son los que esta usando el hijo, tambien los cierro por el tema del
     duplicado explicado mas arriba. Me quedan los otros 2 que son:
 
     + pipe_padreAHijo[1] -> Lado de escritura de lo que el padre le pasa al hijo
@@ -138,7 +138,7 @@ int main(void){
     */
 
     	write( pipe_padreAHijo[1],"hola pepe",strlen("hola pepe"));
-    /*Asi de sencillo es escribir en el proceso hijo, cuando el hijo lo reciva, lo va a recibir como
+    /*Asi de sencillo es escribir en el proceso hijo, cuando el hijo lo reciba, lo va a recibir como
     entrada estandar. En este caso le estoy mandando "hola pepe" al script de python*/
 
     	close( pipe_padreAHijo[1]);
@@ -149,20 +149,20 @@ int main(void){
 
     Tecnicamente espera el cambio de estado del proceso hijo (pid) y guarda el trace en ejecucion (lo guarda en status, segun lo
     que yo quiero consultar puedo consultar, por ejemplo, si el hijo recibio una señal, cual fue su exitcode, etc... a nosotros no nos interesa nada
-    de eso por eso no lo vamos a usar y ponemos en el ultimo argumento, que son las opciones de trace, en 0 para decirle eso).
+    de eso, por eso no lo vamos a usar y ponemos en el ultimo argumento, que son las opciones de trace, en 0 para decirle eso).
 
     Mientras tanto el padre se queda bloqueado. Si vos no haces esto, cuando el hijo termine la ejecucion
     por exit() no va a poder irse ya que la entrada del proceso hijo en la tabla de procesos del sistema operativo
     sigue estando para que el padre lea el codigo de salida. El proceso hijo se encuentra en un estado de terminacion
     que se lo conoce como "zombie", tecnicamente esta muerto porque hizo un exit pero sigue vivo en la tabla de procesos.
 
-    Esto se debe que la llamada de wait() o waitpid() permite al padre leer el exitcode o codigo de salida del hijo. Si el padre nunca se entero
+    Esto se debe a que la llamada de wait() o waitpid() permite al padre leer el exitcode o codigo de salida del hijo. Si el padre nunca se entero
     que el hijo esta muerto, el SO no lo puede sacar (salvo a la fuerza).
 
     ¿Que problemas trae un proceso zombie? No muchos en cuestion de memoria porque no usan recursos del systema, sin embargo tienen un PID
-    asignado por el SO, el cual el sistema operativo tiene un numero finitos de estos. Un zombie no causa muchos problemas.
+    asignado por el SO, de los cuales el sistema operativo tiene un numero finito. Un zombie no causa muchos problemas.
     Varios zombies me limitan la cantidad de procesos que puedo ejecutar, si estan debuggeando un programa que te cree
-    zombies sin querer te puede limitar el numero de procesos disponibles. Por eso es importante matarlos
+    zombies sin querer te puede limitar el numero de procesos disponibles. Por eso es importante matarlos.
 
     Sigamos con el ejemplo.
     */
