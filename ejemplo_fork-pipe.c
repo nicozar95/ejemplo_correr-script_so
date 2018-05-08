@@ -158,9 +158,11 @@ int main(void){
 
     Esto se debe a que la llamada de wait() o waitpid() permite al padre leer el exitcode o codigo de salida del hijo. Si el padre nunca se entero
     que el hijo esta muerto, el SO no lo puede sacar (salvo a la fuerza).
+    
+    El proceso zombie consume recursos del sistema si se le asigno memoria, un fd, etc,etc
 
-    ¿Que problemas trae un proceso zombie? No muchos en cuestion de memoria porque no usan recursos del systema, sin embargo tienen un PID
-    asignado por el SO, de los cuales el sistema operativo tiene un numero finito. Un zombie no causa muchos problemas.
+    ¿Que problemas trae un proceso zombie que no usa recursos? No muchos en cuestion de memoria porque no usan recursos del systema, sin embargo tienen un PID
+    asignado por el SO, de los cuales el sistema operativo tiene un numero finito. Un zombie no causa muchos problemas. 
     Varios zombies me limitan la cantidad de procesos que puedo ejecutar, si estan debuggeando un programa que te cree
     zombies sin querer te puede limitar el numero de procesos disponibles. Por eso es importante matarlos.
 
